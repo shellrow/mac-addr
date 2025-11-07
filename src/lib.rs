@@ -244,6 +244,19 @@ impl From<MacAddr> for [u8; 6] {
     fn from(m: MacAddr) -> Self { m.octets() }
 }
 
+impl TryFrom<&[u8]> for MacAddr {
+    type Error = ();
+
+    #[inline]
+    fn try_from(s: &[u8]) -> Result<Self, Self::Error> {
+        if s.len() == 6 {
+            Ok(MacAddr::new(s[0], s[1], s[2], s[3], s[4], s[5]))
+        } else {
+            Err(())
+        }
+    }
+}
+
 impl AsRef<[u8; 6]> for MacAddr {
     /// # Safety
     /// This is a plain `repr(Rust)` tuple struct of six `u8`s. 
