@@ -12,7 +12,7 @@ use core::str::FromStr;
 #[cfg(feature = "serde")]
 use serde::{de, Deserialize, Deserializer, Serialize, Serializer};
 
-#[cfg(all(feature = "std", not(feature = "alloc")))]
+#[cfg(feature = "std")]
 use std as alloc_mod;
 #[cfg(all(feature = "alloc", not(feature = "std")))]
 use alloc as alloc_mod;
