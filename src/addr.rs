@@ -4,17 +4,17 @@ extern crate alloc;
 #[cfg(all(not(feature = "std"), feature = "alloc"))]
 use alloc::format;
 
+use crate::error::ParseMacAddrError;
 use core::fmt;
 use core::str::FromStr;
-use crate::error::ParseMacAddrError;
 
 #[cfg(feature = "serde")]
-use serde::{de, Deserialize, Deserializer, Serialize, Serializer};
+use serde::{Deserialize, Deserializer, Serialize, Serializer, de};
 
-#[cfg(feature = "std")]
-use std as alloc_mod;
 #[cfg(all(feature = "alloc", not(feature = "std")))]
 use alloc as alloc_mod;
+#[cfg(feature = "std")]
+use std as alloc_mod;
 
 #[cfg(any(feature = "std", feature = "alloc"))]
 use alloc_mod::string::String;
@@ -33,7 +33,9 @@ impl MacAddr {
     /// Constructs from a `[u8; 6]` array.
     #[inline]
     pub fn from_octets(octets: [u8; 6]) -> MacAddr {
-        MacAddr(octets[0], octets[1], octets[2], octets[3], octets[4], octets[5])
+        MacAddr(
+            octets[0], octets[1], octets[2], octets[3], octets[4], octets[5],
+        )
     }
 
     /// Returns the 6 octets backing this address.
@@ -82,7 +84,12 @@ impl MacAddr {
 
     #[inline]
     pub fn is_broadcast(&self) -> bool {
-        self.0 == 0xff && self.1 == 0xff && self.2 == 0xff && self.3 == 0xff && self.4 == 0xff && self.5 == 0xff
+        self.0 == 0xff
+            && self.1 == 0xff
+            && self.2 == 0xff
+            && self.3 == 0xff
+            && self.4 == 0xff
+            && self.5 == 0xff
     }
 
     /// Returns `true` if the address is multicast.
@@ -130,15 +137,21 @@ impl fmt::Display for MacAddr {
 
 impl fmt::LowerHex for MacAddr {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}",
-            self.0, self.1, self.2, self.3, self.4, self.5)
+        write!(
+            f,
+            "{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}",
+            self.0, self.1, self.2, self.3, self.4, self.5
+        )
     }
 }
 
 impl fmt::UpperHex for MacAddr {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{:02X}:{:02X}:{:02X}:{:02X}:{:02X}:{:02X}",
-            self.0, self.1, self.2, self.3, self.4, self.5)
+        write!(
+            f,
+            "{:02X}:{:02X}:{:02X}:{:02X}:{:02X}:{:02X}",
+            self.0, self.1, self.2, self.3, self.4, self.5
+        )
     }
 }
 
@@ -159,7 +172,9 @@ impl FromStr for MacAddr {
             i += 1;
         }
         if i == 6 {
-            Ok(MacAddr(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]))
+            Ok(MacAddr(
+                parts[0], parts[1], parts[2], parts[3], parts[4], parts[5],
+            ))
         } else {
             Err(ParseMacAddrError::TooFewComponents)
         }
@@ -209,12 +224,16 @@ impl<'de> Deserialize<'de> for MacAddr {
 
 impl From<[u8; 6]> for MacAddr {
     #[inline]
-    fn from(v: [u8; 6]) -> Self { MacAddr::from_octets(v) }
+    fn from(v: [u8; 6]) -> Self {
+        MacAddr::from_octets(v)
+    }
 }
 
 impl From<MacAddr> for [u8; 6] {
     #[inline]
-    fn from(m: MacAddr) -> Self { m.octets() }
+    fn from(m: MacAddr) -> Self {
+        m.octets()
+    }
 }
 
 impl TryFrom<&[u8]> for MacAddr {
@@ -232,7 +251,7 @@ impl TryFrom<&[u8]> for MacAddr {
 
 impl AsRef<[u8; 6]> for MacAddr {
     /// # Safety
-    /// This is a plain `repr(Rust)` tuple struct of six `u8`s. 
+    /// This is a plain `repr(Rust)` tuple struct of six `u8`s.
     /// Reinterpreting its memory as `[u8; 6]` is layout-compatible for all stable Rust targets.
     #[inline]
     fn as_ref(&self) -> &[u8; 6] {

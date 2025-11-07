@@ -4,25 +4,34 @@ extern crate alloc;
 #[cfg(all(not(feature = "std"), feature = "alloc"))]
 use alloc::format;
 
-use core::fmt;
-use core::str::FromStr;
+use crate::addr::MacAddr;
 use crate::error::ParseMacAddrError;
-use crate::addr::MacAddr; // EUI-48
+use core::fmt;
+use core::str::FromStr; // EUI-48
 
 #[cfg(feature = "serde")]
-use serde::{de, Deserialize, Deserializer, Serialize, Serializer};
+use serde::{Deserialize, Deserializer, Serialize, Serializer, de};
 
-#[cfg(feature = "std")]
-use std as alloc_mod;
 #[cfg(all(feature = "alloc", not(feature = "std")))]
 use alloc as alloc_mod;
+#[cfg(feature = "std")]
+use std as alloc_mod;
 
 #[cfg(any(feature = "std", feature = "alloc"))]
 use alloc_mod::string::String;
 
 /// 64-bit MAC-like address (IEEE EUI-64).
 #[derive(Clone, Copy, Eq, PartialEq, Ord, PartialOrd, Hash, Default, Debug)]
-pub struct MacAddr8(pub u8, pub u8, pub u8, pub u8, pub u8, pub u8, pub u8, pub u8);
+pub struct MacAddr8(
+    pub u8,
+    pub u8,
+    pub u8,
+    pub u8,
+    pub u8,
+    pub u8,
+    pub u8,
+    pub u8,
+);
 
 impl MacAddr8 {
     /// Constructs a new [`MacAddr8`] from eight octets.
@@ -35,15 +44,16 @@ impl MacAddr8 {
     #[inline]
     pub fn from_octets(octets: [u8; 8]) -> MacAddr8 {
         MacAddr8(
-            octets[0], octets[1], octets[2], octets[3],
-            octets[4], octets[5], octets[6], octets[7],
+            octets[0], octets[1], octets[2], octets[3], octets[4], octets[5], octets[6], octets[7],
         )
     }
 
     /// Returns the 8 octets backing this address.
     #[inline]
     pub fn octets(&self) -> [u8; 8] {
-        [self.0, self.1, self.2, self.3, self.4, self.5, self.6, self.7]
+        [
+            self.0, self.1, self.2, self.3, self.4, self.5, self.6, self.7,
+        ]
     }
 
     /// Returns a colon-separated lowercase hex string (`xx:xx:xx:xx:xx:xx:xx:xx`).
@@ -155,8 +165,7 @@ impl FromStr for MacAddr8 {
         }
         if i == 8 {
             Ok(MacAddr8(
-                parts[0], parts[1], parts[2], parts[3],
-                parts[4], parts[5], parts[6], parts[7],
+                parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6], parts[7],
             ))
         } else {
             Err(ParseMacAddrError::TooFewComponents)
@@ -171,7 +180,7 @@ impl Serialize for MacAddr8 {
             serializer.collect_str(self)
         } else {
             serializer.serialize_bytes(&[
-                self.0, self.1, self.2, self.3, self.4, self.5, self.6, self.7
+                self.0, self.1, self.2, self.3, self.4, self.5, self.6, self.7,
             ])
         }
     }
@@ -189,7 +198,9 @@ impl<'de> Deserialize<'de> for MacAddr8 {
             }
             fn visit_bytes<E: de::Error>(self, v: &[u8]) -> Result<MacAddr8, E> {
                 if v.len() == 8 {
-                    Ok(MacAddr8::new(v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7]))
+                    Ok(MacAddr8::new(
+                        v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7],
+                    ))
                 } else {
                     Err(E::invalid_length(v.len(), &self))
                 }
@@ -209,12 +220,16 @@ impl<'de> Deserialize<'de> for MacAddr8 {
 
 impl From<[u8; 8]> for MacAddr8 {
     #[inline]
-    fn from(v: [u8; 8]) -> Self { MacAddr8::from_octets(v) }
+    fn from(v: [u8; 8]) -> Self {
+        MacAddr8::from_octets(v)
+    }
 }
 
 impl From<MacAddr8> for [u8; 8] {
     #[inline]
-    fn from(m: MacAddr8) -> Self { m.octets() }
+    fn from(m: MacAddr8) -> Self {
+        m.octets()
+    }
 }
 
 impl TryFrom<&[u8]> for MacAddr8 {
@@ -223,7 +238,9 @@ impl TryFrom<&[u8]> for MacAddr8 {
     #[inline]
     fn try_from(s: &[u8]) -> Result<Self, Self::Error> {
         if s.len() == 8 {
-            Ok(MacAddr8::new(s[0], s[1], s[2], s[3], s[4], s[5], s[6], s[7]))
+            Ok(MacAddr8::new(
+                s[0], s[1], s[2], s[3], s[4], s[5], s[6], s[7],
+            ))
         } else {
             Err(())
         }

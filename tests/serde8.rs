@@ -1,6 +1,6 @@
 #![cfg(feature = "serde")]
 
-use mac_addr::{MacAddr8, MacAddr};
+use mac_addr::{MacAddr, MacAddr8};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
@@ -12,8 +12,8 @@ struct Wrap8 {
 #[test]
 fn serde_human_readable_roundtrip_macaddr8() {
     let w = Wrap8 {
-        mac8: MacAddr8::new(0xaa,0xbb,0xcc,0xdd,0xee,0xff,0x00,0x11),
-        mac6: MacAddr::new(0x00,0x25,0x96,0x12,0x34,0x56),
+        mac8: MacAddr8::new(0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff, 0x00, 0x11),
+        mac6: MacAddr::new(0x00, 0x25, 0x96, 0x12, 0x34, 0x56),
     };
     let s = serde_json::to_string(&w).unwrap();
     assert!(s.contains("aa:bb:cc:dd:ee:ff:00:11"), "json={}", s);
@@ -26,8 +26,8 @@ fn serde_human_readable_roundtrip_macaddr8() {
 #[test]
 fn serde_compact_bincode_roundtrip_macaddr8() {
     let w = Wrap8 {
-        mac8: MacAddr8::new(1,2,3,4,5,6,7,8),
-        mac6: MacAddr::new(1,2,3,4,5,6),
+        mac8: MacAddr8::new(1, 2, 3, 4, 5, 6, 7, 8),
+        mac6: MacAddr::new(1, 2, 3, 4, 5, 6),
     };
     let bin = bincode::serialize(&w).unwrap();
     // Sanity check on size: struct Wrap8 has 8 bytes for MacAddr8 + 6 bytes for MacAddr + some overhead for the struct itself.
