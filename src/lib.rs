@@ -130,6 +130,20 @@ impl fmt::Display for MacAddr {
     }
 }
 
+impl fmt::LowerHex for MacAddr {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}",
+            self.0, self.1, self.2, self.3, self.4, self.5)
+    }
+}
+
+impl fmt::UpperHex for MacAddr {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{:02X}:{:02X}:{:02X}:{:02X}:{:02X}:{:02X}",
+            self.0, self.1, self.2, self.3, self.4, self.5)
+    }
+}
+
 /// Error returned when parsing a MAC address with [`FromStr`].
 #[derive(Copy, Debug, PartialEq, Eq, Clone)]
 pub enum ParseMacAddrError {
