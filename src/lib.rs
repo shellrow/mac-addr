@@ -82,6 +82,11 @@ impl MacAddr {
         MacAddr(o1, o2, o3, o4, o5, o6)
     }
 
+    #[inline]
+    pub fn is_broadcast(&self) -> bool {
+        self.0 == 0xff && self.1 == 0xff && self.2 == 0xff && self.3 == 0xff && self.4 == 0xff && self.5 == 0xff
+    }
+
     /// Returns `true` if the address is multicast.
     #[inline]
     pub fn is_multicast(&self) -> bool {
@@ -91,7 +96,7 @@ impl MacAddr {
     /// Returns `true` if the address is unicast.
     #[inline]
     pub fn is_unicast(&self) -> bool {
-        !self.is_multicast()
+        !self.is_multicast() && !self.is_broadcast()
     }
 
     /// Returns `true` if the address is locally administered.
