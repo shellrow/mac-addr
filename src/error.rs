@@ -1,6 +1,6 @@
 use core::fmt;
 
-/// Error returned when parsing a MAC address with [`FromStr`].
+/// Error returned when parsing a MAC address with [`core::str::FromStr`].
 #[derive(Copy, Debug, PartialEq, Eq, Clone)]
 pub enum ParseMacAddrError {
     /// Input contained more than 6 components.
