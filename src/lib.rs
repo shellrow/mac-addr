@@ -6,9 +6,11 @@ extern crate alloc;
 #[cfg(feature = "serde")]
 extern crate serde;
 
-mod addr; // EUI-48
-mod addr8;
-mod error; // EUI-64
+// EUI-48 (6 bytes)
+mod addr; 
+// EUI-64 (8 bytes)
+mod addr8; 
+mod error; 
 
 pub use addr::MacAddr;
 pub use addr8::MacAddr8;
