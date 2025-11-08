@@ -19,7 +19,7 @@ It’s designed for portability and low-level use:
 Add `mac-addr` to your dependencies  
 ```toml:Cargo.toml
 [dependencies]
-mac-addr = "0.2"
+mac-addr = "0.3"
 ```
 
 ## Example
