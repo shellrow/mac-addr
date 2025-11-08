@@ -20,6 +20,7 @@ use std as alloc_mod;
 use alloc_mod::string::String;
 
 /// 48-bit MAC address (IEEE EUI-48).
+#[repr(C)]
 #[derive(Clone, Copy, Eq, PartialEq, Ord, PartialOrd, Hash, Default, Debug)]
 pub struct MacAddr(pub u8, pub u8, pub u8, pub u8, pub u8, pub u8);
 

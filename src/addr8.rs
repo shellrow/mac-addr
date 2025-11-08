@@ -21,6 +21,7 @@ use std as alloc_mod;
 use alloc_mod::string::String;
 
 /// 64-bit MAC-like address (IEEE EUI-64).
+#[repr(C)]
 #[derive(Clone, Copy, Eq, PartialEq, Ord, PartialOrd, Hash, Default, Debug)]
 pub struct MacAddr8(
     pub u8,
